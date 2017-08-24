@@ -9,14 +9,14 @@
   }
 
   .card-header h3 {
-    font-size: $font-size-h6;
+    font-size: $h6-font-size;
     font-weight: $font-weight-normal;
   }
 
   // Sidebar sections
   dt {
-    color: $gray;
-    font-size: $font-size-xs;
+    color: $gray-700;
+    font-size: $font-size-sm;
     font-weight: $font-weight-bold;
     margin-bottom: 3px;
     text-transform: uppercase;
@@ -52,7 +52,7 @@
   padding: 0 $spacer;
 
   .al-document-title-bar {
-    background-color: $gray-lighter;
+    background-color: $gray-200;
     border-bottom: $result-item-border-styling;
     font-size: $font-size-sm;
     margin: 0 (-$spacer) $spacer;
@@ -64,18 +64,18 @@
   }
 
   h1 {
-    font-size: $font-size-h4;
+    font-size: $h4-font-size;
     margin-bottom: $spacer;
   }
 }
 
 // Collection overview
 .al-show-sub-heading {
-  font-size: $font-size-h6;
+  font-size: $h6-font-size;
   text-transform: uppercase;
 
   + dl dt {
-    font-size: $font-size-xs;
+    font-size: $font-size-sm;
     margin-top: 4px;
     text-transform: uppercase;
   }

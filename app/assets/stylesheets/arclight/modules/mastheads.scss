@@ -23,7 +23,7 @@
 
 .al-masthead {
   h1 {
-    font-size: $font-size-h2;
+    font-size: $h2-font-size;
     margin: 0;
     padding: ($spacer * 1.5) ($spacer / 2);
   }
@@ -38,7 +38,7 @@
     }
 
     .active a {
-      color: $gray;
+      color: $gray-700;
     }
 
     .navbar-toggler {
@@ -47,7 +47,7 @@
     }
 
     .navbar-toggler-icon {
-      background-image: $navbar-light-toggler-bg;
+      background-image: $navbar-light-toggler-icon-bg;
     }
   }
 

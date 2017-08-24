@@ -5,7 +5,7 @@
 
   // Result item header
   .al-document-title-bar {
-    background-color: $gray-lighter;
+    background-color: $gray-200;
     border: $result-item-border-styling;
     font-size: $font-size-sm;
     margin: 0 (-$result-item-body-padding - 1px) 0.5rem;
@@ -25,7 +25,7 @@
     }
 
     .document-title-heading {
-      font-size: $font-size-h5;
+      font-size: $h5-font-size;
     }
 
     .breadcrumb-links,
@@ -50,7 +50,7 @@
   .al-number-of-children-badge {
     background-color: #eee;
     border: 1px solid #ccc;
-    color: $gray-light;
+    color: $gray-600;
     vertical-align: top;
   }
 }

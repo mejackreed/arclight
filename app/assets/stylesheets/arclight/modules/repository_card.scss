@@ -1,5 +1,5 @@
 .al-repository {
-  background-color: $gray-lighter;
+  background-color: $gray-200;
   border: $result-item-border-styling;
   margin-bottom: $spacer;
 
@@ -12,7 +12,7 @@
     }
 
     h2 {
-      font-size: $font-size-h5;
+      font-size: $h5-font-size;
       margin-bottom: $spacer;
     }
 

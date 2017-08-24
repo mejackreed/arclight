@@ -1,7 +1,7 @@
 .documents-hierarchy,
 .documents-online_contents {
   .document-title-heading {
-    font-size: $font-size-h5;
+    font-size: $h5-font-size;
   }
 
   .document-title-containers {
@@ -11,17 +11,17 @@
   }
 
   .al-toggle-view-all {
-    color: $gray-light;
+    color: $gray-600;
 
     &:before {
-      color: $gray-light;
+      color: $gray-600;
       content: "\2022";
       padding-right: 3px;
     }
   }
 
   .al-hierarchy-children-status {
-    font-size: $font-size-h6;
+    font-size: $h6-font-size;
     margin-top: 6px;
     text-align: left;
   }
@@ -45,8 +45,8 @@
   }
 
   .al-hierarchy-sub-heading {
-    color: $gray-light;
-    font-size: $font-size-xs;
+    color: $gray-600;
+    font-size: $font-size-sm;
     font-weight: normal;
     text-transform: uppercase;
   }
@@ -55,12 +55,12 @@
   .blacklight-series .document-title-heading,
   .blacklight-file .document-title-heading,
   .blacklight-otherlevel .document-title-heading {
-    font-size: $font-size-h5;
+    font-size: $h5-font-size;
     font-weight: 400;
     margin-bottom: ($spacer / 2);
 
     > a {
-      color: $gray-dark;
+      color: $gray-900;
     }
   }
 
@@ -70,7 +70,7 @@
     .blacklight-subseries .document-title-heading,
     .blacklight-file .document-title-heading,
     .blacklight-otherlevel .document-title-heading {
-      font-size: $font-size-h6;
+      font-size: $h6-font-size;
 
       .documentHeader {
         margin-top: $spacer;
@@ -84,7 +84,7 @@
       padding-left: 10px;
 
       &:before {
-        color: $gray-light;
+        color: $gray-600;
         content: "\027E9";
         padding-right: 3px;
       }
@@ -107,7 +107,7 @@
 }
 
 .al-hierarchy-highlight {
-  background: $state-warning-bg;
+  background: $mark-bg;
 }
 
 // Placeholder styling
@@ -115,13 +115,13 @@
   margin-top: $spacer;
 
   h3 {
-    background-color: $gray-lighter;
+    background-color: $gray-200;
     border-radius: 5px;
-    height: $font-size-h3;
+    height: $h3-font-size;
   }
 
   p {
-    background-color: $gray-lighter;
+    background-color: $gray-200;
     border-radius: 5px;
     height: $font-size-base;
   }
@@ -130,7 +130,7 @@
 // Component show page, Collection context section
 #collection-context {
   h1 {
-    font-size: $font-size-h5;
+    font-size: $h5-font-size;
   }
 
   .documents-hierarchy,
@@ -143,23 +143,23 @@
   // Top-level context
   .al-hierarchy-level-0 .document-title-heading {
     // background-color: red;
-    font-size: $font-size-h5;
+    font-size: $h5-font-size;
     font-weight: 400;
     margin-bottom: ($spacer / 2);
 
     > a {
-      color: $gray-dark;
+      color: $gray-900;
     }
   }
 
   // All subsequent levels
   @for $i from 1 through 12 {
     .al-hierarchy-level-#{$i} .document-title-heading {
-      font-size: $font-size-h6;
+      font-size: $h6-font-size;
       font-weight: 400;
 
       > a {
-        color: $gray-dark;
+        color: $gray-900;
       }
     }
   }
