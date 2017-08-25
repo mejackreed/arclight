@@ -168,11 +168,11 @@ RSpec.describe 'Collection Page', type: :feature do
         it 'has an in person card' do
           within '#accordion' do
             expect(page).to have_css '.card-header h3', text: 'In person'
-            expect(page).to have_css '.card-block dt', text: 'Before you visit:'
-            expect(page).to have_css '.card-block dd', text: /materials are stored offsite and must be paged/
-            expect(page).to have_css '.card-block dt', text: 'Location of this collection:'
-            expect(page).to have_css '.card-block dd a', text: /Special Collections and University Archives/
-            expect(page).to have_css '.card-block dd .al-repository-contact-building', text: 'Green Library'
+            expect(page).to have_css '.card-body dt', text: 'Before you visit:'
+            expect(page).to have_css '.card-body dd', text: /materials are stored offsite and must be paged/
+            expect(page).to have_css '.card-body dt', text: 'Location of this collection:'
+            expect(page).to have_css '.card-body dd a', text: /Special Collections and University Archives/
+            expect(page).to have_css '.card-body dd .al-repository-contact-building', text: 'Green Library'
           end
         end
       end
@@ -180,18 +180,18 @@ RSpec.describe 'Collection Page', type: :feature do
       it 'has a terms and conditions card' do
         within '#accordion' do
           expect(page).to have_css '.card-header h3', text: 'Terms & Conditions'
-          expect(page).to have_css '.card-block dt', text: 'Restrictions:'
-          expect(page).to have_css '.card-block dd', text: 'No restrictions on access.'
-          expect(page).to have_css '.card-block dt', text: 'Terms of Access:'
-          expect(page).to have_css '.card-block dd', text: /^Copyright was transferred/
+          expect(page).to have_css '.card-body dt', text: 'Restrictions:'
+          expect(page).to have_css '.card-body dd', text: 'No restrictions on access.'
+          expect(page).to have_css '.card-body dt', text: 'Terms of Access:'
+          expect(page).to have_css '.card-body dd', text: /^Copyright was transferred/
         end
       end
 
       it 'has a how to cite card' do
         within '#accordion' do
           expect(page).to have_css '.card-header h3', text: 'How to cite this collection'
-          expect(page).to have_css '.card-block dt', text: 'Preferred citation'
-          expect(page).to have_css '.card-block dd', text: /Omega Alpha Archives\. 1894-1992/
+          expect(page).to have_css '.card-body dt', text: 'Preferred citation'
+          expect(page).to have_css '.card-body dd', text: /Omega Alpha Archives\. 1894-1992/
         end
       end
     end

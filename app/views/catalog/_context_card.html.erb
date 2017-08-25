@@ -9,7 +9,7 @@
   </div>
 
   <div id="collapse<%= card_index %>" class="collapse <%= 'show' if card_index.zero? %>" role="tabpanel" aria-labelledby="heading<%= card_index %>">
-    <div class="card-block">
+    <div class="card-body">
       <dl>
         <% generic_document_fields(field_accessor).each do |field_name, field| %>
           <% if generic_should_render_field?(field_accessor, document, field) %>

@@ -79,10 +79,10 @@ RSpec.describe 'Component Page', type: :feature do
         it 'has a terms and conditions card' do
           within '#accordion' do
             expect(page).to have_css('.card-header h3', text: 'Terms & Conditions')
-            expect(page).to have_css('.card-block dt', text: 'Restrictions:')
-            expect(page).to have_css('.card-block dd', text: 'No restrictions on access.')
-            expect(page).to have_css('.card-block dt', text: 'Terms of Access:')
-            expect(page).to have_css('.card-block dd', text: /^Copyright was transferred to the public domain./)
+            expect(page).to have_css('.card-body dt', text: 'Restrictions:')
+            expect(page).to have_css('.card-body dd', text: 'No restrictions on access.')
+            expect(page).to have_css('.card-body dt', text: 'Terms of Access:')
+            expect(page).to have_css('.card-body dd', text: /^Copyright was transferred to the public domain./)
           end
         end
       end
@@ -90,8 +90,8 @@ RSpec.describe 'Component Page', type: :feature do
         it 'has an in person card' do
           within '#accordion' do
             expect(page).to have_css '.card-header h3', text: 'In person'
-            expect(page).to have_css '.card-block dt', text: 'Location of this collection:'
-            expect(page).to have_css '.card-block dd .al-repository-contact-building', text: 'Building 38, Room 1E-21'
+            expect(page).to have_css '.card-body dt', text: 'Location of this collection:'
+            expect(page).to have_css '.card-body dd .al-repository-contact-building', text: 'Building 38, Room 1E-21'
           end
         end
       end
