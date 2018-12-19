@@ -9,26 +9,26 @@ module Arclight
     # @param [String | Array<String>] `inclusive` from the `unitdate`
     # @param [String] `bulk` from the `unitdate`
     # @param [String] `other` from the `unitdate` when type is not specified
-    def initialize(inclusiveHash, bulkHash = nil, otherHash = nil)
+    def initialize(inclusive_hash, bulk_hash = nil, other_hash = nil)
       @inclusive = []
       @bulk = []
       @other = []
-      inclusiveHash.each do |inclusive|
+      inclusive_hash.each do |inclusive|
         if inclusive.is_a? Array # of YYYY-YYYY for ranges
           @inclusive << YearRange.new(inclusive.include?('/') ? inclusive : inclusive.map { |v| v.tr('-', '/') }).to_s
         elsif inclusive.present?
           @inclusive << inclusive.strip
         end
       end
-      bulkHash.each do |bulk|
+      bulk_hash.each do |bulk|
         @bulk << bulk.strip if bulk.present?
       end
-      otherHash.each do |other|
+      other_hash.each do |other|
         @other << other.strip if other.present?
       end
-      @inclusive = @inclusive.join(", ")
-      @bulk = @bulk.join(", ")
-      @other = @other.join(", ")
+      @inclusive = @inclusive.join(', ')
+      @bulk = @bulk.join(', ')
+      @other = @other.join(', ')
     end
 
     # @return [String] the normalized title/date

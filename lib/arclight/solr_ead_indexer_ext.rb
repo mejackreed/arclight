@@ -7,17 +7,12 @@ module Arclight
   module SolrEadIndexerExt
     def additional_component_fields(node, addl_fields = {})
       solr_doc = super
-
       add_count_of_child_compontents(node, solr_doc)
       add_ancestral_titles(node, solr_doc)
       add_ancestral_ids(node, solr_doc)
-
       add_collection_creator_to_component(node, solr_doc)
-
       add_self_or_parents_restrictions(node, solr_doc)
-
       add_self_or_parents_terms(node, solr_doc)
-
       solr_doc
     end
 
@@ -109,9 +104,9 @@ module Arclight
       }
       data[:title] = node.xpath("#{prefix}did/unittitle").text if node.xpath("#{prefix}did/unittitle")
       node.xpath("#{prefix}did/unitdate[@type=\"inclusive\"]").each do |unitdate|
-        if unitdate.attr("type").downcase  == "inclusive"
+        if unitdate.attr('type').casecmp('inclusive') == 0
           data[:unitdate_inclusive] << unitdate.text if unitdate
-        elsif unitdate.attr("type").downcase  == "bulk"
+        elsif unitdate.attr('type').casecmp('bulk') == 0
           data[:unitdate_bulk] << unitdate.text if unitdate
         else
           data[:unitdate_other] << unitdate.text if unitdate
