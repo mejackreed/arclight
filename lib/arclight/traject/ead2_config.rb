@@ -13,6 +13,7 @@ require 'arclight/digital_object'
 require 'arclight/year_range'
 require 'arclight/repository'
 require 'arclight/missing_id_strategy'
+require 'arclight/traject/nokogiri_namespaceless_reader'
 
 NAME_ELEMENTS = %w[corpname famname name persname].freeze
 
@@ -50,8 +51,7 @@ DID_SEARCHABLE_NOTES_FIELDS = %w[
 ].freeze
 
 settings do
-  provide 'nokogiri.namespaces',
-          'xmlns' => 'urn:isbn:1-931666-22-9'
+  provide 'reader_class_name', 'NokogiriNamespacelessReader'
   provide 'solr_writer.commit_on_close', 'true'
   provide 'repository', ENV['REPOSITORY_ID']
   provide 'logger', Logger.new($stderr)
@@ -66,11 +66,11 @@ each_record do |_record, context|
 end
 
 # Top level
-to_field 'id', extract_xpath('//xmlns:eadid'), strip, gsub('.', '-')
-to_field 'title_filing_si', extract_xpath('//xmlns:titleproper[@type="filing"]')
-to_field 'title_ssm', extract_xpath('//xmlns:archdesc/xmlns:did/xmlns:unittitle')
-to_field 'title_teim', extract_xpath('//xmlns:archdesc/xmlns:did/xmlns:unittitle')
-to_field 'ead_ssi', extract_xpath('//xmlns:eadid')
+to_field 'id', extract_xpath('//eadid'), strip, gsub('.', '-')
+to_field 'title_filing_si', extract_xpath('//titleproper[@type="filing"]')
+to_field 'title_ssm', extract_xpath('//archdesc/did/unittitle')
+to_field 'title_teim', extract_xpath('//archdesc/did/unittitle')
+to_field 'ead_ssi', extract_xpath('//eadid')
 
 to_field 'unitdate_ssm', extract_xpath('//xmlns:archdesc/xmlns:did/xmlns:unitdate')
 to_field 'unitdate_bulk_ssim', extract_xpath('//xmlns:archdesc/xmlns:did/xmlns:unitdate[@type="bulk"]')
@@ -78,15 +78,19 @@ to_field 'unitdate_inclusive_ssm', extract_xpath('//xmlns:archdesc/xmlns:did/xml
 to_field 'unitdate_other_ssim', extract_xpath('//xmlns:archdesc/xmlns:did/xmlns:unitdate[not(@type)]')
 
 to_field 'level_ssm' do |record, accumulator|
-  accumulator << record.at_xpath('//xmlns:archdesc').attribute('level').value
+  accumulator << record.at_xpath('//archdesc').attribute('level').value
 end
 
 to_field 'level_sim' do |record, accumulator|
-  accumulator << record.at_xpath('//xmlns:archdesc').attribute('level').value&.capitalize
+  accumulator << record.at_xpath('//archdesc').attribute('level').value&.capitalize
 end
 
-to_field 'unitid_ssm', extract_xpath('//xmlns:archdesc/xmlns:did/xmlns:unitid')
-to_field 'unitid_teim', extract_xpath('//xmlns:archdesc/xmlns:did/xmlns:unitid')
+to_field 'unitid_ssm', extract_xpath('//archdesc/did/unitid')
+to_field 'unitid_teim', extract_xpath('//archdesc/did/unitid')
+
+to_field 'unitdate_bulk_ssim', extract_xpath('//archdesc/did/unitdate[@type="bulk"]')
+to_field 'unitdate_inclusive_ssim', extract_xpath('//archdesc/did/unitdate[@type="inclusive"]')
+to_field 'unitdate_other_ssim', extract_xpath('//archdesc/did/unitdate[not(@type)]')
 
 to_field 'normalized_title_ssm' do |_record, accumulator, context|
   dates = Arclight::NormalizedDate.new(
@@ -121,24 +125,24 @@ to_field 'repository_sim' do |_record, accumulator, context|
   accumulator << context.clipboard[:repository]
 end
 
-to_field 'geogname_ssm', extract_xpath('//xmlns:archdesc/xmlns:controlaccess/xmlns:geogname')
+to_field 'geogname_ssm', extract_xpath('//archdesc/controlaccess/geogname')
 
-to_field 'geogname_sim', extract_xpath('//xmlns:archdesc/xmlns:controlaccess/xmlns:geogname')
+to_field 'geogname_sim', extract_xpath('//archdesc/controlaccess/geogname')
 
-to_field 'creator_ssm', extract_xpath("//xmlns:archdesc/xmlns:did/xmlns:origination[@label='creator']")
-to_field 'creator_sim', extract_xpath("//xmlns:archdesc/xmlns:did/xmlns:origination[@label='creator']")
-to_field 'creator_ssim', extract_xpath("//xmlns:archdesc/xmlns:did/xmlns:origination[@label='creator']")
+to_field 'creator_ssm', extract_xpath("//archdesc/did/origination[@label='creator']")
+to_field 'creator_sim', extract_xpath("//archdesc/did/origination[@label='creator']")
+to_field 'creator_ssim', extract_xpath("//archdesc/did/origination[@label='creator']")
 to_field 'creator_sort' do |record, accumulator|
-  accumulator << record.xpath("//xmlns:archdesc/xmlns:did/xmlns:origination[@label='creator']").map { |c| c.text.strip }.join(', ')
+  accumulator << record.xpath("//archdesc/did/origination[@label='creator']").map { |c| c.text.strip }.join(', ')
 end
 
-to_field 'creator_persname_ssm', extract_xpath("//xmlns:archdesc/xmlns:did/xmlns:origination[@label='creator']/xmlns:persname")
-to_field 'creator_persname_ssim', extract_xpath("//xmlns:archdesc/xmlns:did/xmlns:origination[@label='creator']/xmlns:persname")
-to_field 'creator_corpname_ssm', extract_xpath("//xmlns:archdesc/xmlns:did/xmlns:origination[@label='creator']/xmlns:corpname")
-to_field 'creator_corpname_sim', extract_xpath("//xmlns:archdesc/xmlns:did/xmlns:origination[@label='creator']/xmlns:corpname")
-to_field 'creator_corpname_ssim', extract_xpath("//xmlns:archdesc/xmlns:did/xmlns:origination[@label='creator']/xmlns:corpname")
-to_field 'creator_famname_ssm', extract_xpath("//xmlns:archdesc/xmlns:did/xmlns:origination[@label='creator']/xmlns:famname")
-to_field 'creator_famname_ssim', extract_xpath("//xmlns:archdesc/xmlns:did/xmlns:origination[@label='creator']/xmlns:famname")
+to_field 'creator_persname_ssm', extract_xpath("//archdesc/did/origination[@label='creator']/persname")
+to_field 'creator_persname_ssim', extract_xpath("//archdesc/did/origination[@label='creator']/persname")
+to_field 'creator_corpname_ssm', extract_xpath("//archdesc/did/origination[@label='creator']/corpname")
+to_field 'creator_corpname_sim', extract_xpath("//archdesc/did/origination[@label='creator']/corpname")
+to_field 'creator_corpname_ssim', extract_xpath("//archdesc/did/origination[@label='creator']/corpname")
+to_field 'creator_famname_ssm', extract_xpath("//archdesc/did/origination[@label='creator']/famname")
+to_field 'creator_famname_ssim', extract_xpath("//archdesc/did/origination[@label='creator']/famname")
 
 to_field 'persname_sim', extract_xpath('//xmlns:persname')
 
@@ -165,10 +169,10 @@ to_field 'acqinfo_ssm' do |_record, accumulator, context|
 end
 
 # Indexes only specified controlled terms for archival description into the access_subject field
-to_field 'access_subjects_ssim', extract_xpath('//xmlns:archdesc/xmlns:controlaccess', to_text: false) do |_record, accumulator|
+to_field 'access_subjects_ssim', extract_xpath('//archdesc/controlaccess', to_text: false) do |_record, accumulator|
   accumulator.map! do |element|
     %w[subject function occupation genreform].map do |selector|
-      element.xpath(".//xmlns:#{selector}").map(&:text)
+      element.xpath(".//#{selector}").map(&:text)
     end
   end.flatten!
 end
@@ -177,7 +181,7 @@ to_field 'access_subjects_ssm' do |_record, accumulator, context|
   accumulator.concat Array.wrap(context.output_hash['access_subjects_ssim'])
 end
 
-to_field 'has_online_content_ssim', extract_xpath('.//xmlns:dao') do |_record, accumulator|
+to_field 'has_online_content_ssim', extract_xpath('.//dao') do |_record, accumulator|
   accumulator.replace([accumulator.any?])
 end
 
@@ -186,7 +190,7 @@ to_field 'extent_teim', extract_xpath('//xmlns:archdesc/xmlns:did/xmlns:physdesc
 to_field 'genreform_sim', extract_xpath('//xmlns:archdesc/xmlns:controlaccess/xmlns:genreform')
 to_field 'genreform_ssm', extract_xpath('//xmlns:archdesc/xmlns:controlaccess/xmlns:genreform')
 
-to_field 'date_range_sim', extract_xpath('.//xmlns:did/xmlns:unitdate/@normal', to_text: false) do |_record, accumulator|
+to_field 'date_range_sim', extract_xpath('.//did/unitdate/@normal', to_text: false) do |_record, accumulator|
   range = Arclight::YearRange.new
   next range.years if accumulator.blank?
 
@@ -247,13 +251,13 @@ compose 'components', ->(record, accumulator, _context) { accumulator.concat rec
     accumulator << context.clipboard[:parent].output_hash['ead_ssi'].first
   end
 
-  to_field 'title_filing_si', extract_xpath('./xmlns:did/xmlns:unittitle'), first_only
-  to_field 'title_ssm', extract_xpath('./xmlns:did/xmlns:unittitle')
-  to_field 'title_teim', extract_xpath('./xmlns:did/xmlns:unittitle')
+  to_field 'title_filing_si', extract_xpath('./did/xmlns:unittitle'), first_only
+  to_field 'title_ssm', extract_xpath('./did/unittitle')
+  to_field 'title_teim', extract_xpath('./did/unittitle')
 
-  to_field 'unitdate_bulk_ssim', extract_xpath('./xmlns:did/xmlns:unitdate[@type="bulk"]')
-  to_field 'unitdate_inclusive_ssm', extract_xpath('./xmlns:did/xmlns:unitdate[@type="inclusive"]')
-  to_field 'unitdate_other_ssim', extract_xpath('./xmlns:did/xmlns:unitdate[not(@type)]')
+  to_field 'unitdate_bulk_ssim', extract_xpath('./did/unitdate[@type="bulk"]')
+  to_field 'unitdate_inclusive_ssim', extract_xpath('./did/unitdate[@type="inclusive"]')
+  to_field 'unitdate_other_ssim', extract_xpath('./did/unitdate[not(@type)]')
 
   to_field 'normalized_title_ssm' do |_record, accumulator, context|
     dates = Arclight::NormalizedDate.new(
@@ -300,7 +304,7 @@ compose 'components', ->(record, accumulator, _context) { accumulator.concat rec
     accumulator.concat context.output_hash['parent_unittitles_ssm']
   end
 
-  to_field 'unitid_ssm', extract_xpath('./xmlns:did/xmlns:unitid')
+  to_field 'unitid_ssm', extract_xpath('./did/unitid')
   to_field 'repository_ssm' do |_record, accumulator, context|
     accumulator << context.clipboard[:parent].clipboard[:repository]
   end
@@ -314,21 +318,21 @@ compose 'components', ->(record, accumulator, _context) { accumulator.concat rec
     accumulator.concat context.clipboard[:parent].output_hash['normalized_title_ssm']
   end
 
-  to_field 'extent_ssm', extract_xpath('./xmlns:did/xmlns:physdesc/xmlns:extent')
-  to_field 'extent_teim', extract_xpath('./xmlns:did/xmlns:physdesc/xmlns:extent')
-  to_field 'creator_ssm', extract_xpath("./xmlns:did/xmlns:origination[@label='creator']")
-  to_field 'creator_ssim', extract_xpath("./xmlns:did/xmlns:origination[@label='creator']")
-  to_field 'creators_ssim', extract_xpath("./xmlns:did/xmlns:origination[@label='creator']")
+  to_field 'extent_ssm', extract_xpath('./did/physdesc/extent')
+  to_field 'extent_teim', extract_xpath('./did/physdesc/extent')
+  to_field 'creator_ssm', extract_xpath("./did/origination[@label='creator']")
+  to_field 'creator_ssim', extract_xpath("./did/origination[@label='creator']")
+  to_field 'creators_ssim', extract_xpath("./did/origination[@label='creator']")
   to_field 'creator_sort' do |record, accumulator|
-    accumulator << record.xpath("./xmlns:did/xmlns:origination[@label='creator']").map(&:text).join(', ')
+    accumulator << record.xpath("./did/origination[@label='creator']").map(&:text).join(', ')
   end
   to_field 'collection_creator_ssm' do |_record, accumulator, context|
     accumulator.concat Array.wrap(context.clipboard[:parent].output_hash['creator_ssm'])
   end
-  to_field 'has_online_content_ssim', extract_xpath('.//xmlns:dao') do |_record, accumulator|
+  to_field 'has_online_content_ssim', extract_xpath('//dao') do |_record, accumulator|
     accumulator.replace([accumulator.any?])
   end
-  to_field 'child_component_count_isim', extract_xpath('xmlns:c') do |_record, accumulator|
+  to_field 'child_component_count_isim', extract_xpath('c') do |_record, accumulator|
     accumulator.replace([accumulator.length])
   end
 
@@ -394,12 +398,12 @@ compose 'components', ->(record, accumulator, _context) { accumulator.concat rec
     accumulator.concat(record.xpath('.//xmlns:dao', xmlns: 'urn:isbn:1-931666-22-9').map do |dao|
       label = dao.attributes['title']&.value ||
         dao.xpath('xmlns:daodesc/xmlns:p', xmlns: 'urn:isbn:1-931666-22-9')&.text
-      href = (dao.attributes['href'] || dao.attributes['xlink:href'])&.value
-      Arclight::DigitalObject.new(label: label, href: href).to_json
-    end.to_a)
-  end
+        href = (dao.attributes['href'] || dao.attributes['xlink:href'])&.value
+        Arclight::DigitalObject.new(label: label, href: href).to_json
+      end.to_a)
+    end
 
-  to_field 'date_range_sim', extract_xpath('.//xmlns:did/xmlns:unitdate/@normal', to_text: false) do |_record, accumulator|
+  to_field 'date_range_sim', extract_xpath('./did/unitdate/@normal', to_text: false) do |_record, accumulator|
     range = Arclight::YearRange.new
     next range.years if accumulator.blank?
 
@@ -413,15 +417,15 @@ compose 'components', ->(record, accumulator, _context) { accumulator.concat rec
     to_field "#{selector}_ssm", extract_xpath(".//xmlns:#{selector}")
   end
 
-  to_field 'geogname_sim', extract_xpath('./xmlns:controlaccess/xmlns:geogname')
-  to_field 'geogname_ssm', extract_xpath('./xmlns:controlaccess/xmlns:geogname')
-  to_field 'places_ssim', extract_xpath('xmlns:controlaccess/xmlns:geogname')
+  to_field 'geogname_sim', extract_xpath('./controlaccess/geogname')
+  to_field 'geogname_ssm', extract_xpath('./controlaccess/geogname')
+  to_field 'places_ssim', extract_xpath('controlaccess/geogname')
 
   # Indexes only specified controlled terms for archival description into the access_subject field
-  to_field 'access_subjects_ssim', extract_xpath('./xmlns:controlaccess', to_text: false) do |_record, accumulator|
+  to_field 'access_subjects_ssim', extract_xpath('./controlaccess', to_text: false) do |_record, accumulator|
     accumulator.map! do |element|
       %w[subject function occupation genreform].map do |selector|
-        element.xpath(".//xmlns:#{selector}").map(&:text)
+        element.xpath(".//#{selector}").map(&:text)
       end
     end.flatten!
   end
@@ -432,17 +436,17 @@ compose 'components', ->(record, accumulator, _context) { accumulator.concat rec
 
   # Indexes the acquisition group information into the notes field
   # Please see https://www.loc.gov/ead/tglib/elements/acqinfo.html
-  to_field 'acqinfo_ssim', extract_xpath('/xmlns:ead/xmlns:archdesc/xmlns:acqinfo/*[local-name()!="head"]')
-  to_field 'acqinfo_ssim', extract_xpath('/xmlns:ead/xmlns:archdesc/xmlns:descgrp/xmlns:acqinfo/*[local-name()!="head"]')
-  to_field 'acqinfo_ssim', extract_xpath('./xmlns:acqinfo/*[local-name()!="head"]')
-  to_field 'acqinfo_ssim', extract_xpath('./xmlns:descgrp/xmlns:acqinfo/*[local-name()!="head"]')
+  to_field 'acqinfo_ssim', extract_xpath('/ead/archdesc/acqinfo/*[local-name()!="head"]')
+  to_field 'acqinfo_ssim', extract_xpath('/ead/archdesc/descgrp/acqinfo/*[local-name()!="head"]')
+  to_field 'acqinfo_ssim', extract_xpath('./acqinfo/*[local-name()!="head"]')
+  to_field 'acqinfo_ssim', extract_xpath('./descgrp/acqinfo/*[local-name()!="head"]')
   to_field 'acqinfo_ssm' do |_record, accumulator, context|
     accumulator.concat(context.output_hash.fetch('acqinfo_ssim', []))
   end
 
-  to_field 'language_ssm', extract_xpath('./xmlns:did/xmlns:langmaterial')
+  to_field 'language_ssm', extract_xpath('did/langmaterial')
   to_field 'containers_ssim' do |record, accumulator|
-    record.xpath('./xmlns:did/xmlns:container').each do |node|
+    record.xpath('.//container').each do |node|
       accumulator << [node.attribute('type'), node.text].join(' ').strip
     end
   end

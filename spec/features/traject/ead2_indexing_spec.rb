@@ -19,7 +19,7 @@ describe 'EAD 2 traject indexing', type: :feature do
     File.read(fixture_path)
   end
   let(:nokogiri_reader) do
-    Traject::NokogiriReader.new(fixture_file.to_s, {})
+    Arclight::Traject::NokogiriNamespacelessReader.new(fixture_file.to_s, indexer.settings)
   end
   let(:records) do
     nokogiri_reader.to_a
@@ -131,9 +131,14 @@ describe 'EAD 2 traject indexing', type: :feature do
       end
 
       it 'digital_objects' do
-        # rubocop:disable Style/StringLiterals
-        expect(first_component['digital_objects_ssm']).to eq(["{\"label\":\"Photograph Album\",\"href\":\"http://purl.stanford.edu/kc844kt2526\"}"])
-        # rubocop:enable Style/StringLiterals
+        expect(first_component['digital_objects_ssm']).to eq(
+          [
+            JSON.generate(
+              label: 'Photograph Album',
+              href: 'http://purl.stanford.edu/kc844kt2526'
+            )
+          ]
+        )
       end
 
       it 'geogname' do
@@ -508,6 +513,29 @@ describe 'EAD 2 traject indexing', type: :feature do
           "Gift, John L. Parascandola, PHS Historian's Office, 3/1/1994, Acc. #812. Gift, Donald Goldman, Acc. #2005-21."
         )
       end
+    end
+  end
+
+  describe 'for EAD Documents without XML namespaces' do
+    let(:fixture_without_namespaces) do
+      doc = Nokogiri::XML.parse(fixture_file.to_s)
+      doc.remove_namespaces!
+      doc.to_xml
+    end
+    let(:nokogiri_reader) do
+      Arclight::Traject::NokogiriNamespacelessReader.new(fixture_without_namespaces, indexer.settings)
+    end
+
+    it 'id' do
+      expect(result['id'].first).to eq 'a0011-xml'
+      expect(result['ead_ssi'].first).to eq 'a0011.xml'
+    end
+
+    it 'title' do
+      %w[title_ssm title_teim].each do |field|
+        expect(result[field]).to include 'Stanford University student life photograph album'
+      end
+      expect(result['normalized_title_ssm']).to include 'Stanford University student life photograph album, circa 1900-1906'
     end
   end
 end
