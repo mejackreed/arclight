@@ -5,8 +5,6 @@
 
 A Rails engine supporting discovery of archival materials.
 
-During April - June 2017, ArcLight underwent its initial development as a Minimally Viable Product (MVP). The MVP is targeted for content that is described in the [Encoded Archival Description](http://eadiva.com/2/) (EAD) format. Future development is in the planning phase with no definitive timeline as yet.
-
 ## Requirements
 
 * [Ruby](https://www.ruby-lang.org/en/) 2.2 or later
