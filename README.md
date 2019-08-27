@@ -106,7 +106,6 @@ To release a new version:
 2. Run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, build the gem file (e.g., `gem build arclight.gemspec`) and push the `.gem` file to [rubygems.org](https://rubygems.org) (e.g., `gem push arclight-x.y.z.gem`).
 
 ## Contributing
-
 [Bug reports](https://github.com/sul-dlss/arclight/issues) and [pull requests](https://github.com/sul-dlss/arclight/pulls) are welcome on ArcLight -- see [CONTRIBUTING.md](https://github.com/sul-dlss/arclight/blob/master/CONTRIBUTING.md) for details.
 
 ## License
