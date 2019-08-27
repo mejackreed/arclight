@@ -72,18 +72,6 @@ end
   * [ArcLight MVP Wiki](https://github.com/sul-dlss/arclight/wiki)
   * [Blacklight wiki](https://github.com/projectblacklight/blacklight/wiki)
 
-## ArcLight MVP Development team
-
-* Stanford University
-  * [Camille Villa](https://github.com/camillevilla)
-  * [Darren Hardy](https://github.com/drh-stanford)
-  * [Gary Geisler](https://github.com/ggeisler)
-  * [Jack Reed](https://github.com/mejackreed)
-  * [Jennifer Vine](https://github.com/jvine)
-  * [Jessie Keck](https://github.com/jkeck)
-  * [Mark Matienzo](https://github.com/anarchivist)
-* University of Michigan
-  * [Gordon Leacock](https://github.com/gordonleacock)
 
 ## Development
 
