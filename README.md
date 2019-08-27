@@ -110,4 +110,5 @@ To release a new version:
 [Bug reports](https://github.com/sul-dlss/arclight/issues) and [pull requests](https://github.com/sul-dlss/arclight/pulls) are welcome on ArcLight -- see [CONTRIBUTING.md](https://github.com/sul-dlss/arclight/blob/master/CONTRIBUTING.md) for details.
 
 ## License
+
 The gem is available as open source under the terms of the [Apache 2 License](https://opensource.org/licenses/Apache-2.0).
