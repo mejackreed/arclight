@@ -69,5 +69,24 @@ module Arclight
     def modify_blacklight_yml
       gsub_file 'config/locales/blacklight.en.yml', "application_name: 'Blacklight'", "application_name: 'Arclight'"
     end
+
+    def modify_gemfile
+      gsub_file 'Gemfile', /gem \'turbolinks/, '# gem \'turbolinks'
+    end
+
+    def modify_applicationjs
+      gsub_file 'app/assets/javascripts/application.js', %r{//= require turbolinks}, '//require turbolinks'
+    end
+
+    def modify_application_layout
+      gsub_file 'app/views/layouts/application.html.erb', /<%= javascript_include_tag/, '<%#= javascript_include_tag'
+      gsub_file 'app/views/layouts/application.html.erb', /<%= stylesheet_link_tag/, '<%#= stylesheet_link_tag'
+      inject_into_file 'app/views/layouts/application.html.erb', after: "<%#= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>" do
+        "\n  <%= stylesheet_link_tag 'application', media: 'all' %> "
+      end
+      inject_into_file 'app/views/layouts/application.html.erb', after: "<%#= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>" do
+        "\n  <%= javascript_include_tag 'application' %> "
+      end
+    end
   end
 end
