@@ -19,6 +19,8 @@ require 'arclight/traject/nokogiri_namespaceless_reader'
 extend TrajectPlus::Macros
 # rubocop:enable Style/MixinUsage
 
+
+
 NAME_ELEMENTS = %w[corpname famname name persname].freeze
 
 SEARCHABLE_NOTES_FIELDS = %w[
@@ -475,3 +477,27 @@ class NokogiriXpathExtensions
   end
   # rubocop:enable Naming/PredicateName, Style/FormatString
 end
+
+# Monkey-patch (well, ok, module-prepend, but whatever) traject so that
+# to_field reports benchmarking code
+
+require 'benchmark'
+require 'traject/indexer'
+::BMTIMES = {}
+module Traject
+  module ProfilingToFieldStep
+    def execute(context)
+      ::BMTIMES[field_name] ||= []; ::BMTIMES[field_name] << Benchmark.measure { super }
+    end
+  end
+end
+
+::Traject::Indexer::ToFieldStep.prepend Traject::ProfilingToFieldStep
+
+after_processing do
+  File.open('benchmarks.marshal', 'w') do |f|
+    Marshal.dump(::BMTIMES, f)
+  end
+end
+
+
