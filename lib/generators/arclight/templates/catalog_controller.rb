@@ -384,6 +384,12 @@ class CatalogController < ApplicationController
     config.view.online_contents.partials = config.view.hierarchy.partials.dup
 
     ##
+    # Collection Context
+    config.view.collection_context
+    config.view.collection_context.display_control = false
+    config.view.collection_context.partials = %i[index_collection_context]
+
+    ##
     # Compact index view
     config.view.compact
     config.view.compact.partials = %i[arclight_index_compact]

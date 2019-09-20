@@ -4,7 +4,7 @@
   <h3 class='al-show-sub-heading'>
     <%= t("arclight.views.show.sections.collection_context_field") %>
   </h3>
-  <%= content_tag(
+  <% content_tag(
     :div, '',
     class: 'al-context',
     data: {
@@ -14,7 +14,7 @@
       )
     }
   ) %>
-  <%= content_tag(
+  <% content_tag(
     :div, '',
     class: 'al-ancestors',
     data: {
@@ -22,7 +22,8 @@
       arclight_path: search_catalog_path(hierarchy_context: 'component')
     }
   ) %>
-  <%= content_tag(
+
+  <% content_tag(
     :div, '',
     class: "al-contents al-hierarchy-level-#{@document.component_level} extra-indent documents-hierarchy",
     data: {
@@ -36,5 +37,7 @@
       }
     }
   ) %>
+
+  <%= nested_lists(@document) %>
 
 <% end %>

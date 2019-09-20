@@ -1,0 +1,24 @@
+<li id="<%= document.id %>">
+  <div class="documentHeader row" data-document-id="<%= document.id %>">
+    <% requestable = item_requestable?('', { document: document }) %>
+    <div class="index_title document-title-heading col-md-8">
+      <% if document.containers.present? %>
+        <span class="document-title-containers">
+          <%= document.containers.join(', ') %>:
+        </span>
+      <% end %>
+      <% counter = document_counter_with_offset(document_counter) %>
+      <%= link_to_document document, document_show_link_field(document), counter: counter %>
+      <%= render_document_partial(document, 'arclight_online_content_indicator') %>
+    </div>
+    <div class="al-hierarchy-side-content float-right col">
+    </div>
+  </div>
+
+  <%= content_tag('div', class: 'al-document-abstract-or-scope') do %>
+    <%= content_tag('div', I18n.t('arclight.hierarchy.scope_and_contents'), class: 'al-hierarchy-sub-heading') %>
+    <%= content_tag('div', 'data-arclight-truncate' => true) do %>
+      <%= document.abstract_or_scope %>
+    <% end %>
+  <% end if document.abstract_or_scope %>
+</li>
