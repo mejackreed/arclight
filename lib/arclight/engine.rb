@@ -26,7 +26,7 @@ module Arclight
         plugins: [
           [
             '@babel/plugin-proposal-decorators', {
-              decoratorsBeforeExport: true
+              decoratorsBeforeExport: false
             }
           ]
         ]
