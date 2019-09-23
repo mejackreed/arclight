@@ -21,6 +21,17 @@ module Arclight
     # at the moment anyway
     register_umd_globals :arclight,
                          'blacklight' => 'Blacklight'
+    configure_sprockets_bumble_d do |config|
+      config.babel_options = {
+        plugins: [
+          [
+            '@babel/plugin-proposal-decorators', {
+              decoratorsBeforeExport: true
+            }
+          ]
+        ]
+      }
+    end
 
     config.viewer_class = Arclight::Viewers::OEmbed
     config.oembed_resource_exclude_patterns = [/\.pdf$/, /\.ppt$/]
