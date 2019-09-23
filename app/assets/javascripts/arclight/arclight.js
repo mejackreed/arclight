@@ -6,6 +6,7 @@
 //= require arclight/oembed_viewer
 //= require arclight/search_results
 //= require arclight/truncator
+//= require arclight/foo
 
 // Vendor Scripts
 //= require responsiveTruncator
