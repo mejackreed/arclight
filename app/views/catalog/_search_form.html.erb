@@ -1,0 +1,35 @@
+<%
+# Overridden from Blacklight to inject collection context into the search on the record view
+# and add a drop down to allow the user to choose to search w/i the collection or all collections
+%>
+<%= form_tag search_action_url, method: :get, class: 'search-query-form', role: 'search' do %>
+  <%= render_hash_as_hidden_fields(search_state.params_for_search.except(:q, :search_field, :qt, :page, :utf8).merge(f: (search_state.params_for_search[:f] || {}).except(:collection_sim))) %>
+  <div class="d-md-flex">
+    <%= render 'within_collection_dropdown' if record_view? || (results_view? && has_search_parameters?) %>
+
+    <% if search_fields.length > 1 %>
+      <label for="search_field" class="sr-only"><%= t('blacklight.search.form.search_field.label') %></label>
+    <% end %>
+    <div class="input-group">
+      <% if search_fields.length > 1 %>
+          <%= select_tag(:search_field,
+                         options_for_select(search_fields, h(params[:search_field])),
+                         title: t('blacklight.search.form.search_field.title'),
+                         id: "search_field",
+                         class: "custom-select search-field") %>
+      <% elsif search_fields.length == 1 %>
+        <%= hidden_field_tag :search_field, search_fields.first.last %>
+      <% end %>
+
+      <label for="q" class="sr-only"><%= t('blacklight.search.form.search.label') %></label>
+      <%= text_field_tag :q, params[:q], placeholder: t('blacklight.search.form.search.placeholder'), class: "search-q q rounded-0 form-control", id: "q", autofocus: presenter.autofocus?, data: { autocomplete_enabled: presenter.autocomplete_enabled?, autocomplete_path: search_action_path(action: :suggest) }  %>
+
+      <span class="input-group-append">
+        <button type="submit" class="btn btn-primary search-btn" id="search">
+          <span class="submit-search-text"><%= t('blacklight.search.form.submit') %></span>
+          <%= blacklight_icon :search, aria_hidden: true %>
+        </button>
+      </span>
+    </div>
+  </div>
+<% end %>

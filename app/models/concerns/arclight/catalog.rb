@@ -4,6 +4,17 @@ module Arclight
   ##
   # Arclight specific methods for the Catalog
   module Catalog
+    extend ActiveSupport::Concern
+
+    included do
+      before_action only: :index do
+        if (params.dig(:f, :collection_sim) || []).any?(&:blank?)
+          params[:f][:collection_sim].delete_if(&:blank?)
+          params[:f].delete(:collection_sim) if params[:f][:collection_sim].blank?
+        end
+      end
+    end
+
     ##
     # Overriding the Blacklight method so that the hierarchy view does not start
     # a new search session

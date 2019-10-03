@@ -84,3 +84,7 @@ en:
           scope_and_arrangement_field: Scope and Arrangement
           summary_field: Summary
         tablist_nav: Context
+    within_collection_dropdown:
+      all_collections: all collections
+      label: Search
+      this_collection: this collection

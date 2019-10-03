@@ -1,0 +1,26 @@
+<div class="input-group w-50">
+  <span class="input-group-prepend">
+    <label class="input-group-text" for="within_collection">
+      <%= t('arclight.within_collection_dropdown.label') %>
+    </label>
+  </span>
+  <select
+    id="within_collection"
+    class="custom-select mr-2 search-field rounded-right"
+    <%= 'name="f[collection_sim][]"'.html_safe if within_collection_context? %>
+  >
+    <option
+      <%= "selected" unless within_collection_context? %>
+      value=""
+    >
+      <%= t('arclight.within_collection_dropdown.all_collections') %>
+    </option>
+    <option
+      value="<%= Array(params.dig(:f, :collection_sim)).first || @document && @document.collection_name %>"
+      <%= 'selected' if within_collection_context? %>
+      <%= 'disabled' unless within_collection_context? %>
+    >
+      <%= t('arclight.within_collection_dropdown.this_collection') %>
+    </option>
+  </select>
+</div>
