@@ -1,5 +1,11 @@
 <h2 class="sr-only"><%= t 'arclight.views.show.context' %></h2>
-<!-- Section below will be moved into its own partial later -->
-<%= content_tag(:div, id: t("arclight.views.show.sections.collection_context_field").parameterize) do %>
-  <%= nested_component_lists(@document) %>
+<%= content_tag(:div,
+                class: 'al-collapse-parent',
+                data: {
+                  collapse: t('arclight.views.show.collapse'),
+                  expand: t('arclight.views.show.expand')
+                },
+                id: t("arclight.views.show.sections.collection_context_field").parameterize
+               ) do %>
+  <%= render_document_context(@document, is_original: true) %>
 <% end %>

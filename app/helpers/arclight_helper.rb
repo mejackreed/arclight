@@ -266,40 +266,45 @@ module ArclightHelper
     send(:"render_document_#{config_field}_label", document, field: field)
   end
 
-  ##
-  # Reduces a document's parent_ids to a set of nested ul/li that resembels
-  # the collection / component / subcomponent structure
-  def nested_component_lists(document)
-    document.parent_ids.reverse.reduce(''.html_safe) do |acc, parent_id|
-      content_tag(
-        :ul,
-        class: %w[parent collection-context],
-        data: { 'data-collapse': I18n.t('arclight.views.show.collapse'), 'data-expand': I18n.t('arclight.views.show.expand') }
-      ) do
-        content_tag(:li, id: parent_id) do
-          safe_join(
-            [context_navigator_content(document, parent_id), acc]
-          )
-        end
-      end
-    end
+  def fetch_siblings(document)
+    siblings = Blacklight
+               .default_index
+               .connection
+               .get('select',
+                    params: {
+                      fq: ["{!term f=parent_ssi}#{document.parent_ids[-1]}",
+                           "{!term f=component_level_isim}#{document.component_level}"],
+                      facet: false,
+                      rows: 999_999_999
+                    })
+    solr_docs = siblings['response']['docs'].collect { |d| SolrDocument.new d }
+    solr_docs
   end
 
-  def context_navigator_content(document, parent_id)
-    content_tag(
-      :div, '',
-      class: "context-navigator al-hierarchy-level-#{document.component_level} documents-hierarchy",
-      data: {
-        arclight: {
-          level: document.parent_ids.index(parent_id) + 1,
-          path: search_catalog_path(hierarchy_context: 'component'),
-          name: document.collection_name,
-          parent: parent_id,
-          originalDocument: document.id,
-          originalParents: document.parent_ids
-        }
-      }
-    )
+  def fetch_sorted_siblings(document)
+    siblings = fetch_siblings(document)
+    original_index = siblings.find_index { |d| d.id == document.id } || -1
+    before_siblings = siblings.slice(0, original_index) || []
+    after_siblings = siblings.slice(original_index + 1, siblings.length) || []
+    [before_siblings, after_siblings]
+  end
+
+  def render_document_context(document, core: nil, is_original: false)
+    parents = document.parent_ids
+    before_siblings, after_siblings = fetch_sorted_siblings(document)
+    new_core = render 'catalog/nested_component_context',
+                      document: document,
+                      core: core,
+                      document_counter: parents.length,
+                      is_original: is_original,
+                      before_siblings: before_siblings.to_set,
+                      after_siblings: after_siblings.to_set
+    if parents.length > 1
+      parent_search_id = parents[0] + parents[-1]
+      parent = SolrDocument.find(parent_search_id)
+      return render_document_context(parent, core: new_core)
+    end
+    new_core
   end
 
   ##

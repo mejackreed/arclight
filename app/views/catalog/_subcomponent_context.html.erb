@@ -1,4 +1,4 @@
-<li id="<%= document.id %>" class="al-collection-context row d-flex align-items-start">
+<li id="<%= document.id %>" class="<%= "al-hierarchy-highlight " if is_original %><%= "al-hierarchy-element " unless is_sibling %>al-collection-context row d-flex align-items-start">
   <div class="documentHeader row" data-document-id="<%= document.id %>">
     <% requestable = item_requestable?('', { document: document }) %>
     <div class="col-auto">
@@ -10,7 +10,7 @@
             <%= link_to(
               blacklight_icon(:plus),
               "##{document.id}-collapsible-hierarchy",
-              class: 'al-toggle-view-children',
+              class: "al-toggle-view-children #{'collapsed' if is_original || is_sibling }",
               'aria-label': t('arclight.hierarchy.view_all'),
                 data: {
                   toggle: 'collapse'
@@ -18,47 +18,46 @@
               )
             %>
         <% end %>
-      
+
         <% counter = document_counter_with_offset(document_counter) %>
         <%= link_to_document document, document_show_link_field(document), counter: counter %>
         <% if document.children? %>
           <span class="badge badge-pill badge-secondary al-number-of-children-badge"><%= document.number_of_children %><span class="sr-only"><%= t(:'arclight.views.index.number_of_components', count: document.number_of_children) %></span></span>
         <% end %>
       </div>
-      
+
       <div class="my-w-25 w-md-100 order-12 order-md-1">
         <%= render_index_doc_actions document, wrapping_class: 'd-flex justify-content-end' %>
       </div>
 
       <div class="order-2">
-        <div class="row">
           <%= render partial: 'arclight_abstract_or_scope', locals: { document: document } %>
-        </div>
+          <% if document.number_of_children > 0 %>
+            <%= content_tag(:div, id: "#{document.id}-collapsible-hierarchy",
+                class: "collapse  #{'show' unless is_original || is_sibling} al-hierarchy-level-#{document.component_level}",
+            ) do %>
+              <% if core %>
+                <%= core %>
+              <% elsif %>
+                  <%= content_tag(
+                    :div, '',
+                    class: 'al-contents',
+                    data: {
+                      arclight: {
+                        hierarchy: true,
+                        level: document.component_level + 1,
+                        path: search_catalog_path,
+                        name: document.collection_name,
+                        parent: document.reference,
+                        originalParents: document.parent_ids,
+                        originalDocument: document.id
+                      }
+                    }
+                  ) %>
+              <% end %>
+            <% end %>
+          <% end %>
       </div>
     </div>
   </div>
-
-  <% if document.number_of_children > 0 %>
-    <%= content_tag(:div, id: "#{document.id}-collapsible-hierarchy",
-      class: "collapse show al-hierarchy-level-#{document.component_level}",
-    ) do %>
-
-      <%= content_tag(
-        :div, '',
-        class: 'al-contents',
-        data: {
-          arclight: {
-            hierarchy: true,
-            level: document.component_level + 1,
-            path: search_catalog_path,
-            name: document.collection_name,
-            parent: document.reference,
-            originalParents: document.parent_ids,
-            originalDocument: document.id
-          }
-        }
-      ) %>
-
-    <% end %>
-  <% end %>
 </li>

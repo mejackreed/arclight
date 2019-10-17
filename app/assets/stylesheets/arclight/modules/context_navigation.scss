@@ -1,7 +1,3 @@
-ul.parent {
-  padding-left: 20px;
-}
-
 li.al-collection-context  {
   flex-grow: 1;
   padding-left: 15px;
@@ -19,6 +15,10 @@ li.al-collection-context  {
   }
   .order-2 .row {
     margin-left: 0;
+  }
+
+  .order-2 {
+      flex-grow: 1;
   }
 
   .al-document-abstract-or-scope {

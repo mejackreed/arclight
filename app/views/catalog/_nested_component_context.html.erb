@@ -1,0 +1,9 @@
+<ul>
+  <% before_siblings.each do |doc| %>
+    <%= render partial: 'subcomponent_context', locals: { document: doc, is_original: false, document_counter: document_counter, core: nil, is_sibling: true } %>
+  <% end %>
+  <%= render partial: 'subcomponent_context', locals: { document: document, is_original: is_original, document_counter: document_counter, core: core, is_sibling: false } %>
+  <% after_siblings.each do |doc| %>
+    <%= render partial: 'subcomponent_context', locals: { document: doc, is_original: false, document_counter: document_counter, core: nil, is_sibling: true } %>
+  <% end %>
+</ul>
