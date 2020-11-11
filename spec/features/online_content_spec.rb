@@ -14,7 +14,7 @@ RSpec.describe 'Online Content', type: :feature do
       it 'renders digital object viewer initialization markup', js: true do
         expect(page).to have_css(
           '.al-oembed-viewer[data-arclight-oembed-url="http://purl.stanford.edu/kc844kt2526"]',
-          visible: :all
+          visible: false
         )
       end
     end

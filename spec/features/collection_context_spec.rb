@@ -19,13 +19,13 @@ RSpec.describe 'Collection context', type: :feature, js: true do
     end
 
     it 'direct ancestors are expanded' do
-      expect(page).to have_css '#aoa271aspace_f934f1add34289f28bd0feb478e68275-collapsible-hierarchy.show', visible: :visible
-      expect(page).to have_css '#aoa271aspace_238a0567431f36f49acea49ef576d408-collapsible-hierarchy.show', visible: :visible
-      expect(page).to have_css '#aoa271aspace_563a320bb37d24a9e1e6f7bf95b52671-collapsible-hierarchy.show', visible: :visible
+      expect(page).to have_css '#aoa271aspace_f934f1add34289f28bd0feb478e68275-collapsible-hierarchy.show', visible: true
+      expect(page).to have_css '#aoa271aspace_238a0567431f36f49acea49ef576d408-collapsible-hierarchy.show', visible: true
+      expect(page).to have_css '#aoa271aspace_563a320bb37d24a9e1e6f7bf95b52671-collapsible-hierarchy.show', visible: true
     end
 
     it 'siblings above are hidden' do
-      expect(page).to have_css '#aoa271aspace_843e8f9f22bac69872d0802d6fffbb04', visible: :hidden
+      expect(page).to have_css '#aoa271aspace_843e8f9f22bac69872d0802d6fffbb04', visible: false
     end
   end
 end

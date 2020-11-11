@@ -12,7 +12,7 @@ RSpec.describe 'Autocomplete', type: :feature, js: true do
       EOF
 
       within('.tt-menu') do
-        expect(page).to have_css('.tt-suggestion', text: 'constitution and by-laws', visible: :visible)
+        expect(page).to have_css('.tt-suggestion', text: 'constitution and by-laws', visible: true)
       end
     end
   end

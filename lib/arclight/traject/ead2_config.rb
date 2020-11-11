@@ -5,7 +5,6 @@ require 'traject'
 require 'traject/nokogiri_reader'
 require 'traject_plus'
 require 'traject_plus/macros'
-require 'arclight/exceptions'
 require 'arclight/level_label'
 require 'arclight/normalized_date'
 require 'arclight/normalized_title'
@@ -214,13 +213,13 @@ to_field 'date_range_sim', extract_xpath('/ead/archdesc/did/unitdate/@normal', t
 end
 
 SEARCHABLE_NOTES_FIELDS.map do |selector|
-  to_field "#{selector}_ssm", extract_xpath("/ead/archdesc/#{selector}/*[local-name()!='head']", to_text: false)
+  to_field "#{selector}_tesim", extract_xpath("/ead/archdesc/#{selector}/*[local-name()!='head']", to_text: false)
   to_field "#{selector}_heading_ssm", extract_xpath("/ead/archdesc/#{selector}/head") unless selector == 'prefercite'
   to_field "#{selector}_teim", extract_xpath("/ead/archdesc/#{selector}/*[local-name()!='head']")
 end
 
 DID_SEARCHABLE_NOTES_FIELDS.map do |selector|
-  to_field "#{selector}_ssm", extract_xpath("/ead/archdesc/did/#{selector}", to_text: false)
+  to_field "#{selector}_tesim", extract_xpath("/ead/archdesc/did/#{selector}", to_text: false)
 end
 
 NAME_ELEMENTS.map do |selector|
@@ -243,22 +242,35 @@ to_field 'descrules_ssm', extract_xpath('/ead/eadheader/profiledesc/descrules')
 
 compose 'components', ->(record, accumulator, _context) { accumulator.concat record.xpath('//*[is_component(.)]', NokogiriXpathExtensions.new) } do
   to_field 'ref_ssi' do |record, accumulator, context|
-    accumulator << if record.attribute('id').blank?
+    accumulator <<  if record.attribute('id').blank?
                      strategy = Arclight::MissingIdStrategy.selected
                      hexdigest = strategy.new(record).to_hexdigest
                      parent_id = context.clipboard[:parent].output_hash['id'].first
                      logger.warn('MISSING ID WARNING') do
                        [
-                         "A component in #{parent_id} did not have an ID so one was minted using the #{strategy} strategy.",
+                   #      "A component in #{parent_id} did not have an ID so one was minted using the #{strategy} strategy.",
                          "The ID of this document will be #{parent_id}#{hexdigest}."
                        ].join(' ')
                      end
                      record['id'] = hexdigest
                      hexdigest
                    else
-                     record.attribute('id')&.value&.strip&.gsub('.', '-')
+            #         record.attribute('id')&.value&.strip&.gsub('.', '-')
+
+                     strategy = Arclight::MissingIdStrategy.selected
+                     hexdigest = strategy.new(record).to_hexdigest
+                     parent_id = context.clipboard[:parent].output_hash['id'].first
+                     logger.warn('MISSING ID WARNING') do
+                       [
+                   #      "A component in #{parent_id} did not have an ID so one was minted using the #{strategy} strategy.",
+                         "The ID of this document will be #{parent_id}#{hexdigest}."
+                       ].join(' ')
+                     end
+                     record['id'] = hexdigest
+                     hexdigest
                    end
   end
+
   to_field 'ref_ssm' do |_record, accumulator, context|
     accumulator.concat context.output_hash['ref_ssi']
   end

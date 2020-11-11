@@ -184,25 +184,25 @@ RSpec.describe 'Collection Page', type: :feature do
     context 'collection has online content', js: true do
       it 'clicking contents toggles visibility' do
         click_link 'Contents'
-        expect(page).to have_css '#contents', visible: :visible
-        expect(page).to have_css '#context', visible: :hidden
-        expect(page).to have_css '#access', visible: :hidden
+        expect(page).to have_css '#contents', visible: true
+        expect(page).to have_css '#context', visible: false
+        expect(page).to have_css '#access', visible: false
         click_link 'Overview'
-        expect(page).to have_css '#context', visible: :visible
-        expect(page).to have_css '#contents', visible: :hidden
-        expect(page).to have_css '#access', visible: :hidden
+        expect(page).to have_css '#context', visible: true
+        expect(page).to have_css '#contents', visible: false
+        expect(page).to have_css '#access', visible: false
         click_link 'Access'
-        expect(page).to have_css '#context', visible: :hidden
-        expect(page).to have_css '#contents', visible: :hidden
-        expect(page).to have_css '#access', visible: :visible
+        expect(page).to have_css '#context', visible: false
+        expect(page).to have_css '#contents', visible: false
+        expect(page).to have_css '#access', visible: true
       end
 
       it 'clicking online contents toggles visibility' do
-        expect(page).to have_css '#context', visible: :visible
-        expect(page).to have_css '#online-content', visible: :hidden
+        expect(page).to have_css '#context', visible: true
+        expect(page).to have_css '#online-content', visible: false
         click_link 'Online content'
-        expect(page).to have_css '#context', visible: :hidden
-        expect(page).to have_css '#online-content', visible: :visible
+        expect(page).to have_css '#context', visible: false
+        expect(page).to have_css '#online-content', visible: true
       end
     end
     context 'access tab has visitation notes', js: true do
@@ -261,11 +261,11 @@ RSpec.describe 'Collection Page', type: :feature do
 
   describe 'context and contents' do
     it 'contents are not visible by default' do
-      expect(page).to have_css '#contents', visible: :all
+      expect(page).to have_css '#contents', visible: false
     end
 
     it 'context is visible' do
-      expect(page).to have_css '#context', visible: :visible
+      expect(page).to have_css '#context', visible: true
     end
 
     describe 'interactions', js: true do
