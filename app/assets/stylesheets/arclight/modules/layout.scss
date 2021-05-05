@@ -21,6 +21,7 @@
 .breadcrumb-home-link {
   margin-bottom: ($spacer / 4);
 }
+
 .al-show-actions-box {
   border: $default-border-styling;
   background-color: $gray-200;
@@ -81,7 +82,7 @@
 }
 
 // Show page breadcrumbs
-@for $i from 1 to 14 {
+@for $i from 1 to 20 {
   .breadcrumb-item.breadcrumb-item-#{$i}.media {
     padding-left: 0;
 
@@ -99,7 +100,7 @@
 
 // Show page metadata.
 // Indent to match terminal show page breadcrumb.
-@for $i from 1 to 14 {
+@for $i from 1 to 20 {
   .al-metadata-section.breadcrumb-item-#{$i} {
     padding-left: 0;
 
