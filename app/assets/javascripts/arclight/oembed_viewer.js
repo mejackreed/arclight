@@ -2,10 +2,11 @@ Blacklight.onLoad(function () {
   'use strict';
 
   var onlineContentTabSelector = '[data-arclight-online-content-tab="true"]';
-  var oEmbedViewerSelector = '[data-arclight-oembed="true"]';
 
-  $(onlineContentTabSelector).on('shown.bs.tab', function () {
-    var $viewerElements = $(oEmbedViewerSelector);
+  function loadViewer(context) {
+    var oEmbedViewerSelector = '[data-arclight-oembed="true"]';
+    var $viewerElements = context.find(oEmbedViewerSelector);
+
     if ($viewerElements.length === 0) {
       return;
     }
@@ -42,5 +43,13 @@ Blacklight.onLoad(function () {
         });
       });
     });
+  }
+
+  // Attempt to load viewers directly in the page
+  loadViewer($('body'));
+
+  // Load viewers hidden behind tabs when the tab content is displayed
+  $(onlineContentTabSelector).on('shown.bs.tab', function () {
+    loadViewer($(this));
   });
 });
