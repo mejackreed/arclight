@@ -4,6 +4,9 @@ source 'https://rubygems.org'
 
 # Specify your gem's dependencies in arclight.gemspec
 gemspec
+
+gem 'rexml' if RUBY_VERSION >= '3'
+
 # BEGIN ENGINE_CART BLOCK
 # engine_cart: 1.1.0
 # engine_cart stanza: 0.10.0
@@ -38,3 +41,5 @@ else
   end
 end
 # END ENGINE_CART BLOCK
+
+eval_gemfile File.expand_path('spec/test_app_templates/Gemfile.extra', File.dirname(__FILE__))

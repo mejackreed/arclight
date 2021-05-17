@@ -117,8 +117,8 @@ module Arclight
     # @param [String] `slug` or `name` -- same as `find_by`
     # @return [Repository]
     # @raise [ActiveRecord::RecordNotFound] if cannot find repository
-    def self.find_by!(*args)
-      repository = find_by(*args)
+    def self.find_by!(**kwargs)
+      repository = find_by(**kwargs)
       raise ActiveRecord::RecordNotFound if repository.blank?
 
       repository

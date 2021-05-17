@@ -24,7 +24,6 @@ RSpec.describe 'Scope truncation', type: :feature, js: true do
   end
 end
 
-# rubocop:disable Metrics/AbcSize
 def truncation_works(text)
   expect(page).to have_css 'a.responsiveTruncatorToggle', text: 'view more ▶'
   expect(page).to have_css '.al-document-abstract-or-scope', text: /#{text}/, visible: :all
@@ -32,4 +31,3 @@ def truncation_works(text)
   expect(page).to have_css 'a.responsiveTruncatorToggle', text: 'view less ▼'
   expect(page).to have_css '.al-document-abstract-or-scope', text: /#{text}/, visible: :visible
 end
-# rubocop:enable Metrics/AbcSize

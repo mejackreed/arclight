@@ -2,6 +2,7 @@
 
 require 'rails/generators'
 
+# :nodoc:
 class TestAppGenerator < Rails::Generators::Base
   source_root './spec/test_app_templates'
 

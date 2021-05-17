@@ -1,4 +1,6 @@
-require: rubocop-rspec
+require:
+  - rubocop-rspec
+  - rubocop-rails
 
 inherit_from:
   - .rubocop_todo.yml
@@ -11,7 +13,7 @@ AllCops:
     - 'lib/generators/arclight/templates/**/*'
     - 'vendor/**/*'
     - 'node_modules/**/*'
-  TargetRubyVersion: 2.4
+  TargetRubyVersion: 2.5
   DisplayCopNames: true
 
 Metrics/ModuleLength:
